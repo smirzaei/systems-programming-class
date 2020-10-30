@@ -20,7 +20,7 @@ MAIN    PROC    FAR
         MOV DI,0
         MOV AL,'A'
         MOV AH,80H
-L1:     STOSW
+L1:     STOSW ; Move AX to ES:DI
         INC AL
         INC AH
         LOOP L1
