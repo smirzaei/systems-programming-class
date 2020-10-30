@@ -1,7 +1,4 @@
-; This program first displays a message
-; Then reads user input
-; Then displays user input again (appends 2 \t before the user input)
-; AH=09H INT 21H displays whatever is stored in DX/DL
+; This is incomplete
 STK     SEGMENT
         DW 32 DUP(?)
 STK     ENDS
@@ -46,6 +43,24 @@ MAIN    PROC    FAR
         MOV AH,09H
         MOV DX, OFFSET STRING
         INT 21H
+
+        MOV AH,02H
+        ; \N
+        MOV DL,0AH
+        INT 21H
+
+        ; \R
+        MOV DL,0DH
+        INT 21H
+
+
+;         MOV AH,02H
+;         MOV CX, [LEN]
+;         MOV DL,'*'
+
+; L1:     INT 21H
+;         LOOP L1
+
 
         ; Terminate the program
         MOV AH,4CH
