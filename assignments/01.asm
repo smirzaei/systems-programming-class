@@ -41,7 +41,7 @@ MAIN    PROC    FAR
         MOV SI,OFFSET STRING
         ;MOV CX,80
         MOV CL, LEN
-        XOR CH,CH
+        XOR CH,CH ; mov ch,0
         MOV DI,3*160
         MOV AH,80H ; Set Color
 
