@@ -1,8 +1,8 @@
 ; first, display a message to user.
 ; second, receive an input from the user.
-; third, capitalize each word.
-; fourth, dispay the new output using vram.
-; It's bug is that it doesn't capitilize the first word.
+; third, capitalize the word if it's not in capitalize format.
+; fourth, display the new string using vram.
+; BUG: it doesn't change the case of the first word.
 TITLE CLASS ASSIGNMENT 2
         .model      small
         .stack      64
@@ -22,8 +22,9 @@ main    proc
 
         cld
         call        clear
-        call        showmsg
-        call        readinput
+        call        setCursor
+        call        showMsg
+        call        readInput
 
         mov         di,offset input
         mov         cl,len
@@ -34,21 +35,26 @@ compare:
         jne         over             ; jump if we've looked for every character
         mov         si,di            ; di contains the offset of the character that we were looking for
         lodsb                        ;   we set it to si, because this is how lodsb works
+        
+        ; Checking if it's lower case
+        cmp         al,60h           ; 61h is the ascii code for fist lower case character
+        jbe         compare          ; jump back to compare if the ascii code of AL (the letter after space)
+                                     ; is lower or equal to 60h. it means it is already upper case.
+        ; it is lower case
         xor         al,20h           ; change the case of character
         mov         byte ptr[di], al ; move the changed character back to its original position
-        cmp         cx,0
+        cmp         cx,0             ; checking if we have checked every word.
         jnz         compare
 
-
-over:   call        vidmod
+over:   call        vidMode
         mov         di,4*160         ; set line to 5
-        call        showinput
+        call        showInput
 exit:   mov         ah,4ch
         int         21h
 main    endp
 ; ---------------------------------------------------------------------
 ; Enable video mode
-vidmod  proc
+vidMode  proc
         mov         ax,0b800h
         mov         es,ax
 
@@ -61,7 +67,7 @@ vidmod  proc
         mov         bx,0
         int         10h
         ret
-vidmod  endp
+vidMode  endp
 ; ---------------------------------------------------------------------
 ; Clear the screen
 clear   proc
@@ -73,24 +79,34 @@ clear   proc
         ret
 clear   endp
 ; ---------------------------------------------------------------------
+; set cursor
+setCursor proc
+        mov         ah,02
+        mov         bh,00
+        mov         dl,00 ; column
+        mov         dh,00 ; row
+        int         10h
+        ret
+setCursor endp
+; ---------------------------------------------------------------------
 ; show msg prompt
-showmsg proc
+showMsg proc
         mov         ah,09h
         mov         dx,offset msg
         int         21h
         ret
-showmsg endp
+showMsg endp
 ; ---------------------------------------------------------------------
 ; read user input
-readinput proc
+readInput proc
         mov         ah,0ah
         mov         dx,offset max
         int         21h
         ret
-readinput endp
+readInput endp
 ; ---------------------------------------------------------------------
 ; show user input
-showinput proc
+showInput proc
         mov         si,offset input
         mov         cl,len
         xor         ch,ch
@@ -100,6 +116,6 @@ l2:     lodsb
         stosw
         loop        l2
         ret
-showinput endp
+showInput endp
 ; ---------------------------------------------------------------------
         end        main
