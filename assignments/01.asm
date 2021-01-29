@@ -13,7 +13,7 @@ DTS     ENDS
 CDS     SEGMENT
         ASSUME CS:CDS,SS:STK,DS:DTS
 MAIN    PROC    FAR
-        MOV AX,SEG DTS
+        MOV AX,DTS
         MOV DS,AX
 
         MOV AX,0B800H
