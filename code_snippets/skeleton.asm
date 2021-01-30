@@ -11,6 +11,8 @@ dts     ends
 cds     segment
         assume cs:cds,ss:stk,ds:dts
 main    proc    far
+        mov ax,dts
+        mov ds,ax
 
 exit:   ; terminate the program
         mov ah,4ch

@@ -1,6 +1,8 @@
 ; # DTS part
 p1
+	db 10,13,'CF=  '
 	db 10,13,'ZF=  '
+	db 10,13,'SF=  '
 	db 10,13,'OF=   $'
 zf	dw 6
 OF	dw 11
